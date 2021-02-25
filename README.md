@@ -1,13 +1,13 @@
 # CS372_HW4
 ## Introduction to PostScript
- Work through this [guide to PostScript](http://www.tailrecursive.org/postscript/postscript.html), focusing on the following sections:
+Work through this [guide to PostScript](http://www.tailrecursive.org/postscript/postscript.html), focusing on the following sections:
 
-   [What is PostScript?](http://www.tailrecursive.org/postscript/what-is-it.html)
-   [Graphics Concepts in PostScript](http://www.tailrecursive.org/postscript/graphics.html)
-   [Language Concepts in PostScript](http://www.tailrecursive.org/postscript/language.html)
-   [Programming in PostScript](http://www.tailrecursive.org/postscript/programming.html)
-   [Drawing and Filling Shapes](http://www.tailrecursive.org/postscript/drawing.html)
-   [Transformations](http://www.tailrecursive.org/postscript/transforms.html)
+  * [What is PostScript?](http://www.tailrecursive.org/postscript/what-is-it.html)
+  * [Graphics Concepts in PostScript](http://www.tailrecursive.org/postscript/graphics.html)
+  * [Language Concepts in PostScript](http://www.tailrecursive.org/postscript/language.html)
+  * [Programming in PostScript](http://www.tailrecursive.org/postscript/programming.html)
+  * [Drawing and Filling Shapes](http://www.tailrecursive.org/postscript/drawing.html)
+  * [Transformations](http://www.tailrecursive.org/postscript/transforms.html)
 
 Do the following exercises:
 1. Modify the square drawing program so that one side of the square is left open (that is, without a visible stroke).

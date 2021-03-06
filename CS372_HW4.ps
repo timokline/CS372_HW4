@@ -1,0 +1,171 @@
+%!
+% FNAM: CS372_HW4
+% DESC: 
+% AUTH:
+% STRT:
+% UPDT:
+% VERS:
+
+
+% 1. Modify the square drawing program so that one side of the square is left open
+%    (that is, without a visible stroke).
+%
+%% Drawing a Box
+% Draws a one square inch box and inch in from the bottom left
+
+/inch {72 mul} bind def      % Convert inches->points (1/72 inch)
+newpath                 % Start a new path
+1 inch 1 inch moveto    % an inch in from the lower left
+1 inch 0 inch rlineto    % bottom side
+0 inch 1 inch rlineto    % right side
+-1 inch 0 inch rlineto    % top side
+%closepath
+stroke                  % Draw the box on the paper
+
+showpage                % We're done... eject the page
+
+
+% 2. Modify the program that draws a line at different rotations
+%    so that the line being drawn gets longer as the rotation progresses.
+%
+%% Rotation Example
+% Example of rotation... draws 36 lines in a circular pattern
+
+/len 0.1 def
+
+0 10 360 {              % Go from 0 to 360 degrees in 10 degree steps
+  newpath               % Start a new path
+
+  gsave                 % Keep rotations temporarily
+    288 288 moveto
+    rotate              % Rotate by degrees on stack from 'for'
+    len inch 0 inch rlineto
+    stroke
+  grestore              % Get back the unrotated state
+  
+  /len len 0.1 add def
+} for                   % Iterate over angles
+
+showpage
+
+
+% 3. Modify the program that draws a box using translation so that it draws
+%    a 3 by 3 array of boxes.
+%%Translate
+% Draw a box at 72, 72 using translate
+
+% operator box: xcoord ycoord box -
+% Creates one inch box at xcoord, ycoord
+/box {
+   newpath
+   moveto
+   1 inch 0 inch rlineto
+   0 inch 1 inch rlineto
+   -1 inch 0 inch rlineto
+   closepath
+} def
+
+gsave                           % Preserve the old coordinates
+  72 72 translate               % Set origin to (72, 72)
+  0 0 box stroke                % Draw the box at the new origin
+grestore                        % Restore the old coordinates
+
+
+showpage
+
+
+% 4. Modify the program that draws two boxes and two lines so that the boxes appear to have roughly the same size.
+
+%% Shade and Width Example
+% Demonstrate shading and width in drawing lines and filling shapes
+
+% Define an operator box which builds a path for a one inch square box
+% Note that box does not draw or fill the box.
+%%%/adjusted_inch { 69 mul } def
+%%%
+%%%/box_border {
+%%%  0 adjusted_inch 1 adjusted_inch rlineto
+%%%  1 adjusted_inch 0 adjusted_inch rlineto
+%%%  0 adjusted_inch -1 adjusted_inch rlineto
+%%%  closepath
+%%%} def
+%%%
+%%%0 setgray                               % 100% black
+%%%1 setlinewidth                          % One point thick lines
+%%%72 72 moveto 72 144 lineto stroke       % Draw a one inch line
+%%%
+%%%gsave                                   % Save a copy of the current settings
+%%%  0.5 setgray                           % 50% black
+%%%  10 setlinewidth                       % 10 point wide lines
+%%%  144 72 moveto 144 144 lineto stroke   % Draw a one inch wide line
+%%%  216 72 box                            % Build a square path...
+%%%  0.35 setgray                          %   make it a little darker...
+%%%  fill                                  %   and fill it.
+%%%grestore                                % Go back to the original settings
+%%%
+%%%3 setlinewidth                          % Make the box lines wider
+%%%300 72 1.5 add newpath moveto
+%%%box_border stroke                       % Draw a black box
+%%%%300 10.5 sub 72 1.5 add box_adjust stroke       % Check if box is aligned & same width
+%%%%216 1.5 add 72 2 mul 1.5 add box_adjust stroke  % Draw box above gray one. Check if aligns & same width
+%%%
+%%%
+%%%showpage
+
+% If you try this example, you should note a couple of things.
+% Firstly, the black outlined box is a little larger than the gray filled one.
+% This extra width comes from the 3 point wide lines used to draw it—they are centered about the path of the box.
+% The ink filling the gray box, however, is completely within the path of the box.
+% Also, when shading objects, you must be careful. PostScript makes shades through a process called halftoning.
+% Basically, uniform dots are placed in various patterns to simulate different shades of grey.
+% Unfortunately, various considerations limit how many shades a printer can produce. So some grey tones may come out the same.
+% This may be the case with the filled box and the outlined box when viewed on your screen or printer.
+
+
+% 5. Then modify it again so that the last box is drawn several times at different rotations.
+%
+%% Shade and Width Modification
+%%%/box {
+%%%  newpath
+%%%  moveto                                % Current point is on stack
+%%%  0 72 rlineto                          % Left
+%%%  72 0 rlineto                          % Top
+%%%  0 -72 rlineto                         % Right
+%%%  closepath                             % Bottom
+%%%} def
+%%%
+%%%0 setgray                               % 100% black
+%%%1 setlinewidth                          % One point thick lines
+%%%72 72 moveto 72 144 lineto stroke       % Draw a one inch line
+%%%
+%%%gsave                                   % Save a copy of the current settings
+%%%  0.5 setgray                           % 50% black
+%%%  10 setlinewidth                       % 10 point wide lines
+%%%  144 72 moveto 144 144 lineto stroke   % Draw a one inch wide line
+%%%  216 72 box                            % Build a square path...
+%%%  0.35 setgray                          %   make it a little darker...
+%%%  fill                                  %   and fill it.
+%%%grestore                                % Go back to the original settings
+%%%
+%%%0 40 360 {              % Go from 0 to 360 degrees in 10 degree steps
+%%%  newpath               % Start a new path
+%%%
+%%%  gsave                 % Keep rotations temporarily
+%%%    444 144 1.5 add moveto
+%%%    rotate              % Rotate by degrees on stack from 'for'
+%%%    3 setlinewidth                   % Make the box lines wider
+%%%    box_border        % Draw a black box
+%%%    stroke
+%%%  grestore              % Get back the unrotated state
+%%%  
+%%%} for                   % Iterate over angles
+%%%
+%%%
+%%%
+%%%showpage
+
+
+% 6. Write a program of your own that draws something moderately complex, and uses at least one circle or circular arc.
+%    To draw a circle or arc, you will need to use the arc command.
+
+%%TITLE HERE

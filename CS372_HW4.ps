@@ -1,16 +1,17 @@
 %!
 % FNAM: CS372_HW4
-% DESC: 
-% AUTH:
-% STRT:
-% UPDT:
-% VERS:
+% DESC: A series of Postscript programs for HW4 problems
+% AUTH: Timothy Albert Kline
+% PROF: Dr. Chris Hartman
+% STRT: 26 February 2021
+% UPDT: 05 February 2021
+% VERS: 1.0
 
 
 % 1. Modify the square drawing program so that one side of the square is left open
 %    (that is, without a visible stroke).
 %
-%% Drawing a Box
+%% Drawing a Box [ORIGINAL DESCRIPTION]
 % Draws a one square inch box and inch in from the bottom left
 
 /inch {72 mul} bind def      % Convert inches->points (1/72 inch)
@@ -25,10 +26,11 @@ stroke                  % Draw the box on the paper
 showpage                % We're done... eject the page
 
 
+
 % 2. Modify the program that draws a line at different rotations
 %    so that the line being drawn gets longer as the rotation progresses.
 %
-%% Rotation Example
+%% Rotation Example [ORIGINAL DESCRIPTION]
 % Example of rotation... draws 36 lines in a circular pattern
 
 /len 0.1 def
@@ -49,9 +51,11 @@ showpage                % We're done... eject the page
 showpage
 
 
+
 % 3. Modify the program that draws a box using translation so that it draws
 %    a 3 by 3 array of boxes.
-%%Translate
+%
+%%Translate [ORIGINAL DESCRIPTION]
 % Draw a box at 72, 72 using translate
 
 % operator box: xcoord ycoord box -
@@ -64,108 +68,204 @@ showpage
    -1 inch 0 inch rlineto
    closepath
 } def
+/shift {1 add} def
+/ypos 1 def
 
-gsave                           % Preserve the old coordinates
-  72 72 translate               % Set origin to (72, 72)
-  0 0 box stroke                % Draw the box at the new origin
-grestore                        % Restore the old coordinates
+1 1 3 {
+  /xpos 1 def                         % NOTE-TO-SELF: Declaring outside loop -> Gets overwritten on the second gsave...?
+  xpos inch ypos inch moveto
+  gsave % push
+  1 1 3 { % iterate on x-axis
+    gsave                             % Preserve the old coordinates
+        xpos inch ypos inch translate % Set origin to (currXpos, currYpos)
+        0 0 box stroke                % Draw the box at the new origin
+    grestore                          % Restore the old coordinates
+    /xpos xpos shift def              % Shift coords to the right
+  } for
+  grestore %pop
+  /ypos ypos shift def
+} for
 
 
 showpage
 
 
+
 % 4. Modify the program that draws two boxes and two lines so that the boxes appear to have roughly the same size.
 
-%% Shade and Width Example
+%% Shade and Width Example [ORIGINAL DESCRIPTION]
 % Demonstrate shading and width in drawing lines and filling shapes
-
-% Define an operator box which builds a path for a one inch square box
-% Note that box does not draw or fill the box.
-%%%/adjusted_inch { 69 mul } def
-%%%
-%%%/box_border {
-%%%  0 adjusted_inch 1 adjusted_inch rlineto
-%%%  1 adjusted_inch 0 adjusted_inch rlineto
-%%%  0 adjusted_inch -1 adjusted_inch rlineto
-%%%  closepath
-%%%} def
-%%%
-%%%0 setgray                               % 100% black
-%%%1 setlinewidth                          % One point thick lines
-%%%72 72 moveto 72 144 lineto stroke       % Draw a one inch line
-%%%
-%%%gsave                                   % Save a copy of the current settings
-%%%  0.5 setgray                           % 50% black
-%%%  10 setlinewidth                       % 10 point wide lines
-%%%  144 72 moveto 144 144 lineto stroke   % Draw a one inch wide line
-%%%  216 72 box                            % Build a square path...
-%%%  0.35 setgray                          %   make it a little darker...
-%%%  fill                                  %   and fill it.
-%%%grestore                                % Go back to the original settings
-%%%
-%%%3 setlinewidth                          % Make the box lines wider
-%%%300 72 1.5 add newpath moveto
-%%%box_border stroke                       % Draw a black box
-%%%%300 10.5 sub 72 1.5 add box_adjust stroke       % Check if box is aligned & same width
-%%%%216 1.5 add 72 2 mul 1.5 add box_adjust stroke  % Draw box above gray one. Check if aligns & same width
-%%%
-%%%
-%%%showpage
-
 % If you try this example, you should note a couple of things.
 % Firstly, the black outlined box is a little larger than the gray filled one.
 % This extra width comes from the 3 point wide lines used to draw it—they are centered about the path of the box.
 % The ink filling the gray box, however, is completely within the path of the box.
-% Also, when shading objects, you must be careful. PostScript makes shades through a process called halftoning.
-% Basically, uniform dots are placed in various patterns to simulate different shades of grey.
-% Unfortunately, various considerations limit how many shades a printer can produce. So some grey tones may come out the same.
-% This may be the case with the filled box and the outlined box when viewed on your screen or printer.
+
+% Define an operator box which builds a path for a one inch square box
+% Note that box does not draw or fill the box.
+/adjusted_inch { 69 mul } def
+
+/box_border {
+  0 adjusted_inch 1 adjusted_inch rlineto
+  1 adjusted_inch 0 adjusted_inch rlineto
+  0 adjusted_inch -1 adjusted_inch rlineto
+  closepath
+} def
+
+0 setgray                               % 100% black
+1 setlinewidth                          % One point thick lines
+72 72 moveto 72 144 lineto stroke       % Draw a one inch line
+
+gsave                                   % Save a copy of the current settings
+  0.5 setgray                           % 50% black
+  10 setlinewidth                       % 10 point wide lines
+  144 72 moveto 144 144 lineto stroke   % Draw a one inch wide line
+  216 72 box                            % Build a square path...
+  0.35 setgray                          %   make it a little darker...
+  fill                                  %   and fill it.
+grestore                                % Go back to the original settings
+
+3 setlinewidth                          % Make the box lines wider
+300 72 1.5 add newpath moveto
+box_border stroke                       % Draw a black box
+%300 10.5 sub 72 1.5 add box_adjust stroke       % Check if box is aligned & same width
+%216 1.5 add 72 2 mul 1.5 add box_adjust stroke  % Draw box above gray one. Check if aligns & same width
+
+
+showpage
+
 
 
 % 5. Then modify it again so that the last box is drawn several times at different rotations.
 %
 %% Shade and Width Modification
-%%%/box {
-%%%  newpath
-%%%  moveto                                % Current point is on stack
-%%%  0 72 rlineto                          % Left
-%%%  72 0 rlineto                          % Top
-%%%  0 -72 rlineto                         % Right
-%%%  closepath                             % Bottom
-%%%} def
-%%%
-%%%0 setgray                               % 100% black
-%%%1 setlinewidth                          % One point thick lines
-%%%72 72 moveto 72 144 lineto stroke       % Draw a one inch line
-%%%
-%%%gsave                                   % Save a copy of the current settings
-%%%  0.5 setgray                           % 50% black
-%%%  10 setlinewidth                       % 10 point wide lines
-%%%  144 72 moveto 144 144 lineto stroke   % Draw a one inch wide line
-%%%  216 72 box                            % Build a square path...
-%%%  0.35 setgray                          %   make it a little darker...
-%%%  fill                                  %   and fill it.
-%%%grestore                                % Go back to the original settings
-%%%
-%%%0 40 360 {              % Go from 0 to 360 degrees in 10 degree steps
-%%%  newpath               % Start a new path
-%%%
-%%%  gsave                 % Keep rotations temporarily
-%%%    444 144 1.5 add moveto
-%%%    rotate              % Rotate by degrees on stack from 'for'
-%%%    3 setlinewidth                   % Make the box lines wider
-%%%    box_border        % Draw a black box
-%%%    stroke
-%%%  grestore              % Get back the unrotated state
-%%%  
-%%%} for                   % Iterate over angles
-%%%
-%%%
-%%%
-%%%showpage
+0 setgray                               % 100% black
+1 setlinewidth                          % One point thick lines
+72 72 moveto 72 144 lineto stroke       % Draw a one inch line
+
+gsave                                   % Save a copy of the current settings
+  0.5 setgray                           % 50% black
+  10 setlinewidth                       % 10 point wide lines
+  144 72 moveto 144 144 lineto stroke   % Draw a one inch wide line
+  216 72 box                            % Build a square path...
+  0.35 setgray                          %   make it a little darker...
+  fill                                  %   and fill it.
+grestore                                % Go back to the original settings
+
+0 40 360 {              % Go from 0 to 360 degrees in 10 degree steps
+  newpath               % Start a new path
+
+  gsave                 % Keep rotations temporarily
+    444 144 1.5 add moveto
+    rotate              % Rotate by degrees on stack from 'for'
+    3 setlinewidth                   % Make the box lines wider
+    box_border        % Draw a black box
+    stroke
+  grestore              % Get back the unrotated state
+  
+} for                   % Iterate over angles
+
+
+showpage
+
 
 
 % 6. Write a program of your own that draws something moderately complex, and uses at least one circle or circular arc.
 %    To draw a circle or arc, you will need to use the arc command.
 
-%%TITLE HERE
+%%Apollonian Gasket with Integral symmetry of almost D_3 at Depth 0 and Spirals (almost hypotrochoids)
+% Resources:
+%   https://en.wikipedia.org/wiki/Apollonian_gasket
+%   http://a-d-c.ca/?p=970#page-content
+%   https://en.m.wikibooks.org/wiki/Fractals/Apollonian_fractals - ALGORITHM
+/side 500 def
+/outerRadius side 2 div def                                       % radius of outer circle
+/variableA 1 2 3 sqrt div add def                                 
+/initRadius outerRadius variableA div def                         % Initial tangent circle radii
+
+/outerCenterX 307 def                                             % Center of page horiz.
+/outerCenterY 396 def                                             % Center of page vert.
+
+/height initRadius 3 sqrt mul def                                 % Height of eql. lat. triangle formed by kissing circles
+/i outerCenterY outerRadius sub def                               % "Imaginary" i / shift to the center of the outer circle
+
+/centerAx outerCenterX def
+/centerAy 2 outerRadius mul initRadius sub i add def
+
+/centerBx outerCenterX initRadius add def
+/centerBy 2 outerRadius mul initRadius sub height sub i add def
+
+/centerCx outerCenterX initRadius sub def
+/centerCy centerBy def
+
+
+/makeACircle{ 0 0 currRadius 0 360 arc stroke } def
+
+% Make outer circle
+/currRadius outerRadius def
+gsave
+outerCenterX outerCenterY translate makeACircle
+grestore
+
+% Making a rotated Shape
+/rightAngle {
+    currXpos inch currYpos inch transform
+    1.1 inch 0 inch moveto
+    0 inch 1.1 inch rlineto
+    -1.1 inch 0 inch rlineto
+}def
+/spiral {
+  0 10 360 {              % Go from 0 to 360 degrees in 10 degree steps
+  newpath               % Start a new path
+
+  gsave                 % Keep rotations temporarily
+    currXpos inch currYpos inch moveto
+    rotate              % Rotate by degrees on stack from 'for'
+    rightAngle
+    stroke
+  grestore              % Get back the unrotated state
+  
+  } for
+} def
+
+% Make inner circles with circumscribed shapes
+/currRadius initRadius def
+gsave
+/currXpos centerAx def
+/currYpos centerAy def
+centerAx centerAy translate makeACircle
+spiral
+grestore
+
+gsave
+/currXpos centerBx def
+/currYpos centerBy def
+centerBx centerBy translate makeACircle
+spiral
+grestore
+
+
+gsave
+/currXpos centerCx def
+/currYpos centerCy def
+centerCx centerCy translate makeACircle
+spiral
+grestore
+
+
+% Calculating curvature for the 4th circle from Descartes' Theorem
+/k 1.0 currRadius div def
+
+/kInit 1.0 initRadius div def
+/k4DescartesSqrt kInit 2 exp 3 mul sqrt def
+/k4 k4DescartesSqrt 2 mul kInit 3 mul add def
+
+/r4 1.0 k4 div def 
+
+/currRadius r4 def
+gsave
+outerCenterX outerCenterY translate makeACircle % Not quite the mathmatically correct center for c4
+grestore
+
+% At this point, the math becomes too complex for the language (and my current understanding of PostScript)
+
+showpage
